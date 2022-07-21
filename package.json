@@ -1,10 +1,13 @@
 {
-  "name": "API",
+  "name": "atmosphere",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
-    "test": "node index.js"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
