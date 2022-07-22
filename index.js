@@ -9,7 +9,7 @@ const API_KEY = process.env.API_KEY;
 app.use( express.json() )
 
 app.get("/", (req, res) => {
-    res.status(200).send({ message: "Read the docs https://github.com/teddinotteddy/Atmosphere#readme"})
+    res.sendFile(__dirname + "/index.html")
 })
 
 app.get("/current/:city/:units", async (req, res) => {
