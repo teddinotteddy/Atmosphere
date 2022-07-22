@@ -215,6 +215,35 @@ app.get("/daily/:city/:units", async (req, res) => {
     ])
 });
 
+app.get("/alerts/:city", async (req, res) => {
+
+    const { city } = req.params;
+
+    if (!city) {
+        res.status(418).send({ message: "We need a city!" })
+    }
+
+    const geo_response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`)
+    const geo_data = await geo_response.json();
+
+    const LAT = geo_data[0].lat
+    const LON = geo_data[0].lon
+
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${LAT}&lon=${LON}&appid=${API_KEY}`);
+    const data = await response.json();
+
+    try {
+        res.status(200).send({
+            event: data.alerts[0].event,
+            message: data.alerts[0].description,
+            tags: data.alerts[0].tags
+        })
+    }
+    catch(err) {
+        res.status(200).send({ message: "There are no weather alerts in your area." })
+    }
+})
+
 app.listen(
     PORT,
     () => console.log(`It's alive on http://localhost:${PORT}`)
