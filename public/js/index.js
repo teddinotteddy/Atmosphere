@@ -1,15 +1,18 @@
 const express = require("express");
 const app = express();
 const fetch = require("node-fetch");
+const path = require("path")
 require("dotenv").config();
 
 const PORT = 3000;
 const API_KEY = process.env.API_KEY;
+const absolutePath = path.resolve("./views/index.html");
 
 app.use( express.json() )
 
+
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/views/index.html")
+    res.sendFile(absolutePath)
 })
 
 app.get("/current/:city/:units", async (req, res) => {
