@@ -2,7 +2,7 @@
   "name": "atmosphere",
   "version": "1.0.0",
   "description": "",
-  "main": "./public/js/index.js",
+  "main": "./index.js",
   "engines": {
     "node": "14.x"
   },
