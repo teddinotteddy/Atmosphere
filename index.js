@@ -10,9 +10,89 @@ const absolutePath = path.resolve("./views/index.html");
 
 app.use( express.json() )
 
-
 app.get("/", (req, res) => {
     res.sendFile(absolutePath)
+})
+
+app.get("/all/:city/:units", async (req, res) => {
+
+    const { city } = req.params;
+    const { units } = req.params;
+    
+    if (!city) {
+        res.status(418).send({ message: "We need a city!" })
+    };
+    if (!units) {
+        res.status(418).send({ message: "We need unit type!" })
+    };
+
+    const geo_response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`)
+    const geo_data = await geo_response.json();
+
+    const LAT = geo_data[0].lat
+    const LON = geo_data[0].lon
+
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=${units}`);
+    const data = await response.json();
+
+    const current = {
+        temp: data.current.temp,
+        feels_like: data.current.feels_like,
+        humidity: data.current.humidity,
+        description: data.current.weather[0].main
+    }
+
+    const hourly_data = []
+
+    for (let i = 0; i < 12; i++) {
+        hourly_data.push({
+            temp: data.hourly[i].temp,
+            feels_like: data.hourly[i].feels_like,
+            humidity: data.hourly[i].humidity,
+            description: data.hourly[i].weather[0].main
+        })
+    }
+
+    const daily_data = []
+
+    for (let i = 0; i < 7; i++) {
+        daily_data.push({
+            day_time: data.daily[i].temp.day,
+            night_time: data.daily[i].temp.night,
+            min: data.daily[i].temp.min,
+            max: data.daily[i].temp.max,
+            humidity: data.daily[i].humidity,
+            description: data.daily[i].weather[0].main
+        })
+    }
+
+    try {
+        var alert = {
+            event: data.alerts[0].event,
+            message: data.alerts[0].description,
+            tags: data.alerts[0].tags
+        }
+    }
+    catch(err) {
+        var alert = { message: "There are no weather alerts in your area." }
+    }
+
+    const precipitation_data = []
+
+    for (let i = 0; i < 60; i++) {
+        precipitation_data.push({
+            dt: data.minutely[i].dt,
+            precipitation: data.minutely[i].precipitation
+        })
+    }
+    
+    res.status(200).send({
+        current,
+        hourly_data,
+        daily_data,
+        precipitation_data,
+        alert
+    })
 })
 
 app.get("/current/:city/:units", async (req, res) => {
@@ -37,23 +117,27 @@ app.get("/current/:city/:units", async (req, res) => {
     const data = await response.json();
 
     res.status(200).send({
-        "temp": data.current.temp,
-        "feels_like": data.current.feels_like,
-        "humidity": data.current.humidity,
-        "description": data.current.weather[0].main
+        temp: data.current.temp,
+        feels_like: data.current.feels_like,
+        humidity: data.current.humidity,
+        description: data.current.weather[0].main
     })
 });
 
-app.get("/hourly/:city/:units", async (req, res) => {
+app.get("/hourly/:city/:units/:hour?", async (req, res) => {
 
     const { city } = req.params;
     const { units } = req.params;
+    var { hour } = req.params;
 
     if (!city) {
         res.status(418).send({ message: "We need a city!" })
     };
     if (!units) {
         res.status(418).send({ message: "We need unit type!" })
+    };
+    if (!hour) {
+        var hour = 12
     };
 
     const geo_response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`)
@@ -64,93 +148,35 @@ app.get("/hourly/:city/:units", async (req, res) => {
 
     const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=${units}`);
     const data = await response.json();
+    
+    const hourly_data = []
 
-    res.status(200).send([
-        {
-            "temp": data.hourly[0].temp,
-            "feels_like": data.hourly[0].feels_like,
-            "humidity": data.hourly[0].humidity,
-            "description": data.hourly[0].weather[0].main
-        },
-        {
-            "temp": data.hourly[1].temp,
-            "feels_like": data.hourly[1].feels_like,
-            "humidity": data.hourly[1].humidity,
-            "description": data.hourly[1].weather[0].main
-        },
-        {
-            "temp": data.hourly[2].temp,
-            "feels_like": data.hourly[2].feels_like,
-            "humidity": data.hourly[2].humidity,
-            "description": data.hourly[2].weather[0].main
-        },
-        {
-            "temp": data.hourly[3].temp,
-            "feels_like": data.hourly[3].feels_like,
-            "humidity": data.hourly[3].humidity,
-            "description": data.hourly[3].weather[0].main
-        },
-        {
-            "temp": data.hourly[4].temp,
-            "feels_like": data.hourly[4].feels_like,
-            "humidity": data.hourly[4].humidity,
-            "description": data.hourly[4].weather[0].main
-        },
-        {
-            "temp": data.hourly[5].temp,
-            "feels_like": data.hourly[5].feels_like,
-            "humidity": data.hourly[5].humidity,
-            "description": data.hourly[5].weather[0].main
-        },
-        {
-            "temp": data.hourly[6].temp,
-            "feels_like": data.hourly[6].feels_like,
-            "humidity": data.hourly[6].humidity,
-            "description": data.hourly[6].weather[0].main
-        },
-        {
-            "temp": data.hourly[7].temp,
-            "feels_like": data.hourly[7].feels_like,
-            "humidity": data.hourly[7].humidity,
-            "description": data.hourly[7].weather[0].main
-        },
-        {
-            "temp": data.hourly[8].temp,
-            "feels_like": data.hourly[8].feels_like,
-            "humidity": data.hourly[8].humidity,
-            "description": data.hourly[8].weather[0].main
-        },
-        {
-            "temp": data.hourly[9].temp,
-            "feels_like": data.hourly[9].feels_like,
-            "humidity": data.hourly[9].humidity,
-            "description": data.hourly[9].weather[0].main
-        },
-        {
-            "temp": data.hourly[10].temp,
-            "feels_like": data.hourly[10].feels_like,
-            "humidity": data.hourly[10].humidity,
-            "description": data.hourly[10].weather[0].main
-        },
-        {
-            "temp": data.hourly[11].temp,
-            "feels_like": data.hourly[11].feels_like,
-            "humidity": data.hourly[11].humidity,
-            "description": data.hourly[11].weather[0].main
-        },
-    ])
+    for (let i = 0; i < hour; i++) {
+        hourly_data.push({
+            temp: data.hourly[i].temp,
+            feels_like: data.hourly[i].feels_like,
+            humidity: data.hourly[i].humidity,
+            description: data.hourly[i].weather[0].main
+        })
+    }
+
+    res.status(200).send(hourly_data)
 })
 
-app.get("/daily/:city/:units", async (req, res) => {
+app.get("/daily/:city/:units/:days?", async (req, res) => {
 
     const { city } = req.params;
     const { units } = req.params;
+    var { days } = req.params;
 
     if (!city) {
         res.status(418).send({ message: "We need a city!" })
     };
     if (!units) {
         res.status(418).send({ message: "We need unit type!" })
+    };
+    if (!days) {
+        var days = 7
     };
 
     const geo_response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`)
@@ -162,64 +188,20 @@ app.get("/daily/:city/:units", async (req, res) => {
     const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=${units}`);
     const data = await response.json();
 
-    res.status(200).send([
-        {
-            "day time": data.daily[0].temp.day,
-            "night time": data.daily[0].temp.night,
-            "min": data.daily[0].temp.min,
-            "max": data.daily[0].temp.max,
-            "humidity": data.daily[0].humidity,
-            "description": data.daily[0].weather[0].main
-        },
-        {
-            "day time": data.daily[1].temp.day,
-            "night time": data.daily[1].temp.night,
-            "min": data.daily[1].temp.min,
-            "max": data.daily[1].temp.max,
-            "humidity": data.daily[1].humidity,
-            "description": data.daily[1].weather[0].main
-        },
-        {
-            "day time": data.daily[2].temp.day,
-            "night time": data.daily[2].temp.night,
-            "min": data.daily[2].temp.min,
-            "max": data.daily[2].temp.max,
-            "humidity": data.daily[2].humidity,
-            "description": data.daily[2].weather[0].main
-        },
-        {
-            "day time": data.daily[3].temp.day,
-            "night time": data.daily[3].temp.night,
-            "min": data.daily[3].temp.min,
-            "max": data.daily[3].temp.max,
-            "humidity": data.daily[3].humidity,
-            "description": data.daily[3].weather[0].main
-        },
-        {
-            "day time": data.daily[4].temp.day,
-            "night time": data.daily[4].temp.night,
-            "min": data.daily[4].temp.min,
-            "max": data.daily[4].temp.max,
-            "humidity": data.daily[4].humidity,
-            "description": data.daily[4].weather[0].main
-        },
-        {
-            "day time": data.daily[5].temp.day,
-            "night time": data.daily[5].temp.night,
-            "min": data.daily[5].temp.min,
-            "max": data.daily[5].temp.max,
-            "humidity": data.daily[5].humidity,
-            "description": data.daily[5].weather[0].main
-        },
-        {
-            "day time": data.daily[6].temp.day,
-            "night time": data.daily[6].temp.night,
-            "min": data.daily[6].temp.min,
-            "max": data.daily[6].temp.max,
-            "humidity": data.daily[6].humidity,
-            "description": data.daily[6].weather[0].main
-        },
-    ])
+    const daily_data = []
+
+    for (let i = 0; i < days; i++) {
+        daily_data.push({
+            day_time: data.daily[i].temp.day,
+            night_time: data.daily[i].temp.night,
+            min: data.daily[i].temp.min,
+            max: data.daily[i].temp.max,
+            humidity: data.daily[i].humidity,
+            description: data.daily[i].weather[0].main
+        })
+    }
+
+    res.status(200).send(daily_data)
 });
 
 app.get("/alerts/:city", async (req, res) => {
@@ -250,6 +232,43 @@ app.get("/alerts/:city", async (req, res) => {
         res.status(200).send({ message: "There are no weather alerts in your area." })
     }
 })
+
+app.get("/precipitation/:city/:units/:minutes?", async (req, res) => {
+
+    const { city } = req.params;
+    const { units } = req.params;
+    var { minutes } = req.params;
+
+    if (!city) {
+        res.status(418).send({ message: "We need a city!" })
+    };
+    if (!city) {
+        res.status(418).send({ message: "We need a unit type!" })
+    };
+    if (!minutes) {
+        var minutes = 60
+    };
+
+    const geo_response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${API_KEY}`)
+    const geo_data = await geo_response.json();
+
+    const LAT = geo_data[0].lat
+    const LON = geo_data[0].lon
+
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=${units}`);
+    const data = await response.json();
+
+    const precipitation_data = []
+
+    for (let i = 0; i < 60; i++) {
+        precipitation_data.push({
+            dt: data.minutely[i].dt,
+            precipitation: data.minutely[i].precipitation
+        })
+    }
+
+    res.status(200).send(precipitation_data)
+});
 
 app.listen(
     PORT,
