@@ -32,3 +32,7 @@ Gives precipitation data for the next 60 minutes by default
 ### Weather Alerts 
 Gives weather warnings/alerts 
 `https://atmosphere.tropically.org/alerts/{city}`
+
+### Coords to City
+Convert lon and lat coordinates to get the city name.
+`https://atmosphere.tropically.org/city/{lat}/{lon}`

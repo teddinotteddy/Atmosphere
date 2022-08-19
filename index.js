@@ -270,6 +270,19 @@ app.get("/precipitation/:city/:units/:minutes?", async (req, res) => {
     res.status(200).send(precipitation_data)
 });
 
+app.get("/city/:lat/:lon", async (req, res) => {
+
+    const { lat } = req.params;
+    const { lon } = req.params;
+
+    const response = await fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${API_KEY}`)
+    const data = await response.json()
+
+    res.status(200).send({
+        name: data[0].name
+    })
+});
+
 app.listen(
     PORT,
     () => console.log(`It's alive on http://localhost:${PORT}`)
