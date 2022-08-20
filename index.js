@@ -6,12 +6,13 @@ require("dotenv").config();
 
 const PORT = 3000;
 const API_KEY = process.env.API_KEY;
-const absolutePath = path.resolve("./views/index.html");
 
 app.use( express.json() )
 
+app.use(express.static(path.join(__dirname, "/public")))
+
 app.get("/", (req, res) => {
-    res.sendFile(absolutePath)
+    res.sendFile(path.join(__dirname + "/index.html"))
 })
 
 app.get("/all/:city/:units", async (req, res) => {

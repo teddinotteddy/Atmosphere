@@ -1,11 +1,41 @@
 # Atmosphere API 
 Atmosphere is a simple, yet powerful, free weather API. 
 
-# About the API
-All of the api endpoints and other important information 
+# Contents
+- [API Keys](#api-keys)
+- [Contributing](#contributing)
+    -[Getting Started](#getting-started)
+    -[Prerequisites](#prerequisites)
+        -[Node JS/NPM](#node-js-and-npm)
+        -[Openweathermap](#openweathermap)
+    -[Build/Run](#build-and-run)
+- [Endpoints](#api-endpoints)
+    - [All in One](#all-in-one)
+    - [Current](#current-weather)
+    - [Hourly](#hourly-weather)
+    - [Daily](#daily-weather)
+    - [Precipitation](#precipitation-data)
+    - [Alerts](#weather-alerts)
+    - [Coords to City](#coords-to-city)
 
 ## API Keys 
 There are no API keys! Atmosphere is available to everyone for free.
+
+# Contributing
+
+## Getting Started 
+It's paramount that you know how to work with Node.js, Express.js, html, and css before contributing to the project as these make up the project. 
+
+## Prerequisites
+
+### Node JS and NPM
+To install NodeJS, navigate to the NodeJS [website](https://nodejs.org/en/) and download the most recent version.
+
+### Openweathermap 
+Create an account with Openweathermap as that's where we get our weather data from. Then get an API key for Onecall API 1.0.
+
+## Build and Run
+To install all necessary dependencies run ```npm run install-all```. Then make a copy of ```.env_template``` and rename it to ```.env```. Add your Openweathermap API key. Then use ```npm start``` to run Atmosphere.
 
 ## API Endpoints
 
