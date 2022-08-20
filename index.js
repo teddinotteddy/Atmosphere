@@ -11,6 +11,11 @@ app.use( express.json() )
 
 app.use(express.static(path.join(__dirname, "/public")))
 
+const cors = require('cors');
+app.use(cors({
+    origin: 'https://www.section.io'
+}));
+
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname + "/index.html"))
 })
