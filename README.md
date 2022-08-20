@@ -8,7 +8,7 @@ Atmosphere is a simple, yet powerful, free weather API.
     - [Prerequisites](#prerequisites)
         - [Node JS/NPM](#node-js-and-npm)
         - [Openweathermap](#openweathermap)
-    -[Build/Run](#build-and-run)
+    - [Build/Run](#build-and-run)
 - [Endpoints](#api-endpoints)
     - [All in One](#all-in-one)
     - [Current](#current-weather)
