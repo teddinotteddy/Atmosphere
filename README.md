@@ -46,23 +46,92 @@ Get the information you need just in one call. Information provided includes: cu
 ### Current Weather
 Gives current weather data.
 `https://atmosphere.tropically.org/current/{city}/{units}`
+```
+{
+  "temp": integer,
+  "feels_like": integer,
+  "humidity": integer,
+  "description": string
+}
+```
 
 ### Hourly Weather
 Gives weather data for the next 12 hours by default
 `https://atmosphere.tropically.org/hourly/{city}/{units}/{hours?}`
+```
+[
+  {
+    "temp": integer,
+    "feels_like": integer,
+    "humidity": integer,
+    "description": string
+  },
+  {
+    "temp": integer,
+    "feels_like": integer,
+    "humidity": integer,
+    "description": string
+  }...
+]
+```
 
 ### Daily Weather
 Gives weather data for the next 7 days by default
 `https://atmosphere.tropically.org/daily/{city}/{units}/{days?}`
+```
+[
+  {
+    "day_time": integer,
+    "night_time": integer,
+    "min": integer,
+    "max": integer,
+    "humidity": integer
+    "description": string
+  },
+  {
+    "day_time": integer,
+    "night_time": integer,
+    "min": integer,
+    "max": integer,
+    "humidity": integer,
+    "description": string
+  }...
+]
+```
 
 ### Precipitation Data
 Gives precipitation data for the next 60 minutes by default
 `https://atmosphere.tropically.org/precipitation/{city}/{units}/{minutes?}`
+```
+  {
+    "dt": integer,
+    "precipitation": integer
+  },
+  {
+    "dt": integer,
+    "precipitation": integer
+  }...
+]
+```
 
 ### Weather Alerts 
 Gives weather warnings/alerts 
 `https://atmosphere.tropically.org/alerts/{city}`
+```
+{
+  "event": string,
+  "message": string,
+  "tags": [
+    string...
+  ]
+}
+```
 
 ### Coords to City
 Convert lon and lat coordinates to get the city name.
 `https://atmosphere.tropically.org/city/{lat}/{lon}`
+```
+{
+  "name": string
+}
+```
