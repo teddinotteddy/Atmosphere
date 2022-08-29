@@ -4,7 +4,7 @@ const fetch = require("node-fetch");
 const path = require("path")
 require("dotenv").config();
 
-const PORT = 3000;
+const PORT = 4000;
 const API_KEY = process.env.API_KEY;
 
 app.use( express.json() )
@@ -122,6 +122,7 @@ app.get("/current/:city/:units", async (req, res) => {
 
     const response = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${LAT}&lon=${LON}&appid=${API_KEY}&units=${units}`);
     const data = await response.json();
+    console.log(data)
 
     res.status(200).send({
         temp: data.current.temp,
