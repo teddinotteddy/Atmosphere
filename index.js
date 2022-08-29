@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname + "/index.html"))
 })
 
-app.get("/all/:city/:units", async (req, res, next) => {
+app.get("/all/:city/:units", async (req, res) => {
 
     const { city } = req.params;
     const { units } = req.params;
@@ -100,11 +100,9 @@ app.get("/all/:city/:units", async (req, res, next) => {
         precipitation_data,
         alert
     })
-    
-    next()
 })
 
-app.get("/current/:city/:units", async (req, res, next) => {
+app.get("/current/:city/:units", async (req, res) => {
 
     const { city } = req.params;
     const { units } = req.params;
@@ -133,7 +131,7 @@ app.get("/current/:city/:units", async (req, res, next) => {
     })
 });
 
-app.get("/hourly/:city/:units/:hour?", async (req, res, next) => {
+app.get("/hourly/:city/:units/:hour?", async (req, res) => {
 
     const { city } = req.params;
     const { units } = req.params;
@@ -172,7 +170,7 @@ app.get("/hourly/:city/:units/:hour?", async (req, res, next) => {
     res.status(200).send(hourly_data)
 })
 
-app.get("/daily/:city/:units/:days?", async (req, res, next) => {
+app.get("/daily/:city/:units/:days?", async (req, res) => {
 
     const { city } = req.params;
     const { units } = req.params;
@@ -211,10 +209,9 @@ app.get("/daily/:city/:units/:days?", async (req, res, next) => {
     }
 
     res.status(200).send(daily_data)
-    next()
 });
 
-app.get("/alerts/:city", async (req, res, next) => {
+app.get("/alerts/:city", async (req, res) => {
 
     const { city } = req.params;
 
@@ -241,11 +238,9 @@ app.get("/alerts/:city", async (req, res, next) => {
     catch(err) {
         res.status(200).send({ message: "There are no weather alerts in your area." })
     }
-    
-    next()
 })
 
-app.get("/precipitation/:city/:units/:minutes?", async (req, res, next) => {
+app.get("/precipitation/:city/:units/:minutes?", async (req, res) => {
 
     const { city } = req.params;
     const { units } = req.params;
@@ -280,11 +275,9 @@ app.get("/precipitation/:city/:units/:minutes?", async (req, res, next) => {
     }
 
     res.status(200).send(precipitation_data)
-    
-    next()
 });
 
-app.get("/city/:lat/:lon", async (req, res, next) => {
+app.get("/city/:lat/:lon", async (req, res) => {
 
     const { lat } = req.params;
     const { lon } = req.params;
@@ -295,8 +288,6 @@ app.get("/city/:lat/:lon", async (req, res, next) => {
     res.status(200).send({
         name: data[0].name
     })
-    
-    next()
 });
 
 app.listen(
