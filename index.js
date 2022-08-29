@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname + "/index.html"))
 })
 
-app.get("/all/:city/:units", async (req, res) => {
+app.get("/all/:city/:units", async (req, res, next) => {
 
     const { city } = req.params;
     const { units } = req.params;
@@ -102,7 +102,7 @@ app.get("/all/:city/:units", async (req, res) => {
     })
 })
 
-app.get("/current/:city/:units", async (req, res) => {
+app.get("/current/:city/:units", async (req, res, next) => {
 
     const { city } = req.params;
     const { units } = req.params;
@@ -131,7 +131,7 @@ app.get("/current/:city/:units", async (req, res) => {
     })
 });
 
-app.get("/hourly/:city/:units/:hour?", async (req, res) => {
+app.get("/hourly/:city/:units/:hour?", async (req, res, next) => {
 
     const { city } = req.params;
     const { units } = req.params;
@@ -170,7 +170,7 @@ app.get("/hourly/:city/:units/:hour?", async (req, res) => {
     res.status(200).send(hourly_data)
 })
 
-app.get("/daily/:city/:units/:days?", async (req, res) => {
+app.get("/daily/:city/:units/:days?", async (req, res, next) => {
 
     const { city } = req.params;
     const { units } = req.params;
@@ -211,7 +211,7 @@ app.get("/daily/:city/:units/:days?", async (req, res) => {
     res.status(200).send(daily_data)
 });
 
-app.get("/alerts/:city", async (req, res) => {
+app.get("/alerts/:city", async (req, res, next) => {
 
     const { city } = req.params;
 
@@ -240,7 +240,7 @@ app.get("/alerts/:city", async (req, res) => {
     }
 })
 
-app.get("/precipitation/:city/:units/:minutes?", async (req, res) => {
+app.get("/precipitation/:city/:units/:minutes?", async (req, res, next) => {
 
     const { city } = req.params;
     const { units } = req.params;
@@ -277,7 +277,7 @@ app.get("/precipitation/:city/:units/:minutes?", async (req, res) => {
     res.status(200).send(precipitation_data)
 });
 
-app.get("/city/:lat/:lon", async (req, res) => {
+app.get("/city/:lat/:lon", async (req, res, next) => {
 
     const { lat } = req.params;
     const { lon } = req.params;
